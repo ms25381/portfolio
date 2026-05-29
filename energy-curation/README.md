@@ -1,43 +1,46 @@
-# Energy Curation
+# Energy Curation Framework
 
 ## Overview
 
-This project demonstrates the design and implementation of a large-scale energy curation pipeline used to transform raw market and operational energy data into analytics-ready datasets for reporting, forecasting, settlement analysis, and business intelligence.
+This project demonstrates the design of a large-scale energy data curation framework that transforms raw operational, market, asset, ownership, and classification data into analytics-ready datasets.
 
-The solution consolidates multiple market, generation, ownership, and fuel classification sources into a unified curated model supporting enterprise analytics and regulatory reporting.
+The framework consolidates multiple source domains into a standardized curated model that supports reporting, forecasting, operational analytics, regulatory analysis, and business intelligence.
+
+All table names, field names, and source-system references in this project are anonymized and generalized for public portfolio use.
 
 ---
 
 ## Business Problem
 
-Energy market data is distributed across numerous operational systems.
+Energy data is typically distributed across many operational and market systems.
 
-Challenges include:
+Common challenges include:
 
-- Multiple source systems
-- Complex business rules
-- Effective-dated relationships
-- Ownership changes over time
-- Fuel classification changes
-- Large historical datasets
-- Reporting consistency requirements
+* Multiple source systems
+* Effective-dated relationships
+* Ownership changes over time
+* Asset classification changes
+* Market classification changes
+* Large historical datasets
+* Complex business rules
+* Reporting consistency requirements
 
-Without a curated model, analysts spend significant time manually reconciling data from multiple systems.
+Without a curated data layer, analysts often spend significant time reconciling data manually across multiple systems.
 
 ---
 
 ## Solution
 
-The Energy Curation Framework creates a standardized business layer that combines:
+The Energy Curation Framework creates a standardized business-ready data layer that combines:
 
-- Energy production
-- Market schedules
-- Resource ownership
-- Unit definitions
-- Fuel classifications
-- Market dimensions
+* Energy production data
+* Market schedule data
+* Resource ownership data
+* Asset definition data
+* Fuel and technology classification data
+* Market reference data
 
-into a single curated dataset optimized for downstream analytics.
+into a unified curated dataset optimized for analytics and downstream consumption.
 
 ---
 
@@ -47,19 +50,19 @@ into a single curated dataset optimized for downstream analytics.
                  SOURCE SYSTEMS
 
       +-------------------------------+
-      | Energy Production Data        |
+      | Energy Measurement Data       |
       +-------------------------------+
 
       +-------------------------------+
-      | Resource Ownership Data       |
+      | Ownership & Position Data     |
       +-------------------------------+
 
       +-------------------------------+
-      | Unit Definitions              |
+      | Asset Definition Data         |
       +-------------------------------+
 
       +-------------------------------+
-      | Fuel Type Definitions         |
+      | Classification Reference Data |
       +-------------------------------+
 
       +-------------------------------+
@@ -68,17 +71,17 @@ into a single curated dataset optimized for downstream analytics.
                     |
                     v
 
-             ENRICHED LAYER
+             STANDARDIZED LAYER
 
                     |
                     v
 
-           ENERGY CURATION ENGINE
+          ENERGY CURATION ENGINE
 
                     |
                     v
 
-        CURATED ENERGY DATA MART
+          CURATED ENERGY DATA MART
 
                     |
         +-----------+-----------+
@@ -92,97 +95,108 @@ into a single curated dataset optimized for downstream analytics.
 
 ## Business Objectives
 
-The platform provides:
+The framework supports:
 
-- Consistent reporting
-- Historical accuracy
-- Fuel type analysis
-- Ownership analysis
-- Resource performance tracking
-- Market participation analysis
-- Executive dashboards
+* Consistent reporting
+* Historical accuracy
+* Ownership analysis
+* Asset performance analysis
+* Energy production analysis
+* Market participation analysis
+* Fuel and technology mix analysis
+* Executive dashboards
 
 ---
 
 ## Data Domains
 
-### Energy Production
+### Energy Measurements
 
-Contains:
+Includes generalized energy values such as:
 
-- Real-time MW
-- Day-ahead MW
-- Scheduled energy
-- Actual generation
-
----
-
-### Resource Ownership
-
-Contains:
-
-- Organization ownership
-- Ownership percentages
-- Effective date ranges
+* Actual energy
+* Scheduled energy
+* Forecasted energy
+* Market-submitted energy
+* Operational output
 
 ---
 
-### Unit Definitions
+### Ownership and Position Data
 
-Contains:
+Includes:
 
-- Unit characteristics
-- Capacity classifications
-- Combined cycle indicators
-
----
-
-### Fuel Classifications
-
-Contains:
-
-- Primary fuel
-- Secondary fuel
-- Fuel category mappings
+* Participant ownership
+* Ownership percentages
+* Effective date ranges
+* Historical position changes
 
 ---
 
-### Market Dimensions
+### Asset Definitions
 
-Contains:
+Includes:
 
-- Market identifiers
-- Trading dimensions
-- Reporting attributes
+* Resource attributes
+* Asset classifications
+* Operational characteristics
+* Capacity classifications
+* Technology indicators
+
+---
+
+### Classification Data
+
+Includes:
+
+* Primary classification
+* Secondary classification
+* Technology category
+* Reporting category
+
+---
+
+### Market Reference Data
+
+Includes:
+
+* Market identifiers
+* Reporting dimensions
+* Business grouping attributes
+* Market participation attributes
 
 ---
 
 ## Curation Process
 
 ```text
-Load Energy Data
-         |
-         v
+Load Energy Measurement Data
+          |
+          v
 
 Load Ownership Data
-         |
-         v
+          |
+          v
 
-Load Unit Definitions
-         |
-         v
+Load Asset Definition Data
+          |
+          v
 
-Load Fuel Mappings
-         |
-         v
+Load Classification Data
+          |
+          v
 
-Apply Effective Dating
-         |
-         v
+Load Market Reference Data
+          |
+          v
+
+Apply Effective-Dated Logic
+          |
+          v
 
 Apply Business Rules
-         |
-         v
+          |
+          v
 
 Generate Curated Dataset
 ```
@@ -191,31 +205,35 @@ Generate Curated Dataset
 
 ## Effective-Dated Processing
 
-Many source systems use SCD Type 2 style history.
+Many enterprise energy datasets rely on effective-dated history.
 
-The framework preserves historical accuracy by selecting records where:
+The framework preserves point-in-time accuracy by selecting records where:
 
 ```sql
-effectiveday <= business_date
-and terminationday > business_date
+effective_start_date <= business_date
+and effective_end_date > business_date
 ```
 
-This ensures historical reports reflect the business reality that existed at the time.
+This ensures historical reports reflect the ownership, classification, and asset attributes that were valid at the time.
 
 ---
 
 ## Example Business Relationships
 
 ```text
-Energy Record
+Energy Measurement
       |
-      +---- Ownership Information
+      +---- Ownership Attributes
       |
-      +---- Unit Definition
+      +---- Asset Attributes
       |
-      +---- Fuel Type
+      +---- Classification Attributes
       |
-      +---- Market Dimension
+      +---- Market Reference Attributes
+      |
+      v
+
+Curated Energy Record
 ```
 
 ---
@@ -224,76 +242,78 @@ Energy Record
 
 ### Ownership Allocation
 
-Energy values are adjusted based upon ownership percentage.
+Energy values can be adjusted by ownership percentage.
 
 Example:
 
 ```text
-Actual Generation = 100 MW
+Measured Energy = 100 MW
 
-Ownership = 50%
+Ownership Percentage = 50%
 
-Owned Generation = 50 MW
+Allocated Energy = 50 MW
 ```
 
 ---
 
-### Fuel Classification
+### Classification Assignment
 
-Units are categorized into:
+Assets are grouped into generalized categories such as:
 
 ```text
-Coal
+Thermal
 
-Natural Gas
-
-Nuclear
+Renewable
 
 Hydro
 
-Solar
+Nuclear
 
-Wind
-
-Oil
+Storage
 
 Other
 ```
 
 ---
 
-### Combined Cycle Handling
+### Asset Grouping
 
-Combined-cycle units receive additional business classifications to support operational reporting.
+Assets may receive additional business classifications to support operational reporting, planning, and analytics.
 
 ---
 
 ## Curated Data Model
 
-Example output fields:
+Example anonymized output fields:
 
 ```text
 business_date
 
-unit_id
+asset_identifier
 
-unit_name
+asset_name
 
-org_id
+participant_identifier
 
-ownership_factor
+participant_name
 
-real_time_mw
+ownership_percentage
 
-day_ahead_mw
+actual_energy_value
 
-fuel_type
+scheduled_energy_value
 
-sub_fuel_type
+primary_classification
 
-market_name
+secondary_classification
 
-capacity_class
+market_category
+
+asset_category
+
+reporting_region
+
+load_timestamp
 ```
 
 ---
@@ -301,15 +321,15 @@ capacity_class
 ## Example Join Architecture
 
 ```text
-Energy Data
+Energy Measurement Data
       |
-      +---- Ownership Table
+      +---- Ownership Reference
       |
-      +---- Unit Definition
+      +---- Asset Definition Reference
       |
-      +---- Fuel Definition
+      +---- Classification Reference
       |
-      +---- Market Dimension
+      +---- Market Reference
       |
       v
 
@@ -320,13 +340,14 @@ Curated Energy Dataset
 
 ## Analytics Use Cases
 
-### Fuel Mix Reporting
+### Energy Mix Reporting
 
-Analyze generation by:
+Analyze production by:
 
-- Fuel type
-- Region
-- Time period
+* Classification
+* Region
+* Asset type
+* Time period
 
 ---
 
@@ -334,9 +355,10 @@ Analyze generation by:
 
 Analyze:
 
-- Company generation share
-- Ownership trends
-- Resource portfolios
+* Participant share
+* Ownership changes
+* Portfolio exposure
+* Historical ownership trends
 
 ---
 
@@ -344,19 +366,21 @@ Analyze:
 
 Compare:
 
-- Day-ahead schedules
-- Real-time production
-- Variances
+* Scheduled values
+* Actual values
+* Forecasted values
+* Variances
 
 ---
 
-### Capacity Planning
+### Capacity and Planning Analytics
 
 Support:
 
-- Forecasting
-- Resource adequacy
-- Strategic planning
+* Forecasting
+* Resource adequacy
+* Portfolio planning
+* Strategic decision making
 
 ---
 
@@ -364,25 +388,25 @@ Support:
 
 The framework validates:
 
-### Ownership Totals
+### Ownership Reconciliation
 
-Ownership percentages must reconcile.
+Ownership percentages should reconcile within expected thresholds.
 
-### Fuel Assignments
+### Classification Completeness
 
-All units require valid fuel mappings.
+All assets should map to valid classifications.
 
-### Effective Dates
+### Effective-Date Validity
 
-Date ranges must be valid.
+Date ranges must be logically valid and non-conflicting.
 
-### Market References
+### Reference Integrity
 
-Dimension mappings must exist.
+All required reference mappings should exist.
 
 ### Duplicate Detection
 
-Business keys must remain unique.
+Business keys should remain unique at the curated grain.
 
 ---
 
@@ -392,19 +416,23 @@ Techniques include:
 
 ### Partition Pruning
 
-Reduce data scanning.
+Reduce the amount of scanned data.
 
 ### Broadcast Joins
 
-Optimize reference joins.
+Optimize smaller reference table joins.
 
 ### Incremental Processing
 
-Process only changed data.
+Process only new or changed data.
 
 ### Delta Optimization
 
-Improve query performance.
+Improve query and storage performance.
+
+### Historical Windowing
+
+Process large historical ranges in controlled batches.
 
 ---
 
@@ -412,10 +440,10 @@ Improve query performance.
 
 The curated model preserves:
 
-- Historical ownership changes
-- Fuel reclassifications
-- Unit definition changes
-- Market structure changes
+* Historical ownership changes
+* Historical classification changes
+* Historical asset attribute changes
+* Historical market reference changes
 
 This enables accurate point-in-time reporting.
 
@@ -423,20 +451,18 @@ This enables accurate point-in-time reporting.
 
 ## Example Reporting Outputs
 
-### Generation by Fuel
+### Energy by Classification
 
 ```text
-Natural Gas    45%
+Thermal       45%
 
-Nuclear        25%
+Nuclear       25%
 
-Coal           15%
+Hydro         12%
 
-Hydro           8%
+Renewable     15%
 
-Solar           5%
-
-Wind            2%
+Other          3%
 ```
 
 ---
@@ -444,13 +470,13 @@ Wind            2%
 ### Ownership Distribution
 
 ```text
-Company A   30%
+Participant A   30%
 
-Company B   25%
+Participant B   25%
 
-Company C   20%
+Participant C   20%
 
-Others      25%
+Other           25%
 ```
 
 ---
@@ -459,13 +485,14 @@ Others      25%
 
 Typical implementation:
 
-- Azure Databricks
-- Delta Lake
-- Spark SQL
-- PySpark
-- Delta Live Tables
-- Unity Catalog
-- Azure Data Factory
+* Azure Databricks
+* Delta Lake
+* Spark SQL
+* PySpark
+* Unity Catalog
+* Azure Data Factory
+* Cloud object storage
+* Enterprise reporting tools
 
 ---
 
@@ -473,23 +500,23 @@ Typical implementation:
 
 ### Consistent Reporting
 
-Single source of truth.
+Creates a common source of truth for energy analytics.
 
 ### Historical Accuracy
 
-Point-in-time analysis.
+Supports point-in-time reporting.
 
 ### Better Governance
 
-Standardized business logic.
+Centralizes business rules and reference logic.
 
 ### Improved Performance
 
-Curated datasets optimized for consumption.
+Curated datasets are optimized for consumption.
 
 ### Faster Analytics
 
-Reduced reconciliation effort.
+Reduces manual reconciliation effort.
 
 ---
 
@@ -497,12 +524,12 @@ Reduced reconciliation effort.
 
 Key lessons from large-scale energy curation projects:
 
-- Effective-dated joins are critical.
-- Ownership history must be preserved.
-- Fuel mappings change over time.
-- Business rules should be centralized.
-- Curated models dramatically simplify analytics.
-- Governance and lineage are essential for regulatory reporting.
+* Effective-dated joins are critical.
+* Ownership history must be preserved.
+* Classification mappings change over time.
+* Business rules should be centralized.
+* Curated models simplify downstream analytics.
+* Governance and lineage are essential for trusted reporting.
 
 ---
 
@@ -510,15 +537,16 @@ Key lessons from large-scale energy curation projects:
 
 Potential future improvements include:
 
-- Real-time curation
-- Forecast integration
-- Predictive analytics
-- AI-assisted anomaly detection
-- Automated business rule generation
-- Enhanced observability
+* Near real-time curation
+* Forecast integration
+* Predictive analytics
+* AI-assisted anomaly detection
+* Automated business rule generation
+* Enhanced observability
+* Self-service data product onboarding
 
 ---
 
 ## Key Takeaway
 
-The Energy Curation Framework transforms fragmented operational and market energy data into a trusted, business-ready data product that supports reporting, analytics, forecasting, regulatory compliance, and strategic decision-making across the enterprise.
+The Energy Curation Framework transforms fragmented operational and market energy data into a trusted, business-ready data product that supports reporting, analytics, forecasting, compliance, and strategic decision-making across the enterprise.
