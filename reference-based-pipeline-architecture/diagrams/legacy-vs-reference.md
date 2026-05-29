@@ -17,13 +17,13 @@ The objective is to demonstrate how separating responsibilities into independent
                    |       METADATA CONFIG TABLE      |
                    |                                  |
                    |  Pipeline Definitions            |
-                   |  Runtime Parameters             |
-                   |  Validation Rules               |
-                   |  Execution Logic                |
-                   |  Scheduling Information         |
-                   |  Environment Settings           |
-                   |  Data Quality Rules             |
-                   |  Business Rules                 |
+                   |  Runtime Parameters              |
+                   |  Validation Rules                |
+                   |  Execution Logic                 |
+                   |  Scheduling Information          |
+                   |  Environment Settings            |
+                   |  Data Quality Rules              |
+                   |  Business Rules                  |
                    +---------------+------------------+
                                    |
                                    |
