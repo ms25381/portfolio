@@ -1,1 +1,213 @@
+# ============================================================
+# SAMPLE SCHEMA CONTRACT
+# ============================================================
+# Defines WHAT data should look like.
+#
+# Schema contracts provide:
+#
+# - Column definitions
+# - Data types
+# - Required fields
+# - Validation rules
+# - Primary keys
+# - Business constraints
+#
+# Schema contracts DO NOT contain:
+#
+# - Execution logic
+# - Scheduling information
+# - Runtime parameters
+#
+# They act as the formal interface between
+# data producers and data consumers.
+# ============================================================
 
+schema_contract_id: schema_customer_v1
+
+name: Customer Master Schema
+
+version: 1.0
+
+description: >
+  Canonical schema definition for customer
+  master data.
+
+dataset_type: master_data
+
+# ------------------------------------------------------------
+# PRIMARY KEY
+# ------------------------------------------------------------
+
+primary_key:
+
+  - customer_id
+
+# ------------------------------------------------------------
+# COLUMN DEFINITIONS
+# ------------------------------------------------------------
+
+columns:
+
+  - name: customer_id
+
+    datatype: string
+
+    nullable: false
+
+    description: Unique customer identifier
+
+  - name: customer_name
+
+    datatype: string
+
+    nullable: false
+
+    description: Customer legal name
+
+  - name: customer_type
+
+    datatype: string
+
+    nullable: false
+
+    description: Customer classification
+
+  - name: email_address
+
+    datatype: string
+
+    nullable: true
+
+    description: Customer email
+
+  - name: phone_number
+
+    datatype: string
+
+    nullable: true
+
+    description: Customer phone
+
+  - name: status
+
+    datatype: string
+
+    nullable: false
+
+    description: Active or inactive customer
+
+  - name: created_date
+
+    datatype: timestamp
+
+    nullable: false
+
+    description: Creation timestamp
+
+  - name: modified_date
+
+    datatype: timestamp
+
+    nullable: false
+
+    description: Last update timestamp
+
+# ------------------------------------------------------------
+# BUSINESS RULES
+# ------------------------------------------------------------
+
+validation_rules:
+
+  - rule_id: customer_id_required
+
+    rule_type: not_null
+
+    column: customer_id
+
+  - rule_id: customer_name_required
+
+    rule_type: not_null
+
+    column: customer_name
+
+  - rule_id: valid_status
+
+    rule_type: allowed_values
+
+    column: status
+
+    values:
+
+      - ACTIVE
+
+      - INACTIVE
+
+  - rule_id: valid_customer_type
+
+    rule_type: allowed_values
+
+    column: customer_type
+
+    values:
+
+      - COMMERCIAL
+
+      - RESIDENTIAL
+
+      - GOVERNMENT
+
+      - INTERNAL
+
+# ------------------------------------------------------------
+# DATA QUALITY THRESHOLDS
+# ------------------------------------------------------------
+
+quality_thresholds:
+
+  max_null_percentage: 1.0
+
+  max_duplicate_percentage: 0.1
+
+  fail_pipeline_on_violation: true
+
+# ------------------------------------------------------------
+# COMPATIBILITY POLICY
+# ------------------------------------------------------------
+
+schema_evolution:
+
+  allow_additive_columns: true
+
+  allow_column_removal: false
+
+  allow_type_changes: false
+
+# ------------------------------------------------------------
+# DATA GOVERNANCE
+# ------------------------------------------------------------
+
+governance:
+
+  owner_team: customer_data_team
+
+  steward: data_governance
+
+  pii_columns:
+
+    - email_address
+
+    - phone_number
+
+  retention_years: 7
+
+# ------------------------------------------------------------
+# AUDIT
+# ------------------------------------------------------------
+
+audit:
+
+  created_by: platform_team
+
+  version: 1.0
+
+  approved: true
