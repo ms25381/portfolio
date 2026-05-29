@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Enterprise Pipeline Run History</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1a1a1a;background:#f0efe8;width:1200px;}
+.top-bar{background:#fff;border-bottom:1px solid #e0dfd8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.top-bar-title{font-size:16px;font-weight:600;color:#1a1a1a;}
+.tab{font-size:12px;font-weight:600;color:#185FA5;border-bottom:2px solid #185FA5;padding-bottom:2px;}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 20px;background:#f7f6f0;border-bottom:1px solid #e0dfd8;}
+.pill{background:#fff;border:1px solid #d3d1c7;border-radius:20px;padding:3px 10px;font-size:11px;color:#5f5e5a;}
+.content{padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+.card{background:#fff;border:1px solid #d3d1c7;border-radius:8px;padding:16px;}
+.card-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.card-sub{font-size:11px;color:#888780;margin-bottom:12px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;font-weight:600;color:#888780;text-align:left;padding:8px 10px;border-bottom:1px solid #e0dfd8;background:#f7f6f0;white-space:nowrap;}
+td{font-size:11px;padding:8px 10px;border-bottom:1px solid #e0dfd8;white-space:nowrap;}
+tr:nth-child(even) td{background:#fafaf7;}
+.bs{background:#EAF3DE;color:#3B6D11;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:600;}
+.bf{background:#FCEBEB;color:#A32D2D;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:600;}
+.pager{display:flex;align-items:center;gap:4px;margin-top:10px;justify-content:center;}
+.pb{border:1px solid #d3d1c7;border-radius:6px;padding:4px 10px;font-size:12px;background:#f7f6f0;color:#1a1a1a;}
+.pb.on{background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;font-weight:600;}
+.legend{display:flex;gap:14px;font-size:11px;color:#5f5e5a;margin-bottom:8px;justify-content:flex-end;}
+.ld{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle;}
+.footer{margin-top:8px;padding:16px 20px 24px;text-align:center;font-size:10.5px;color:#b0ada8;border-top:1px solid #e0dfd8;}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:20px;">
+    <span class="top-bar-title">Enterprise Pipeline Run History</span>
+    <span class="tab">Run history</span>
+  </div>
+  <span style="font-size:11px;color:#888780;">Last refreshed: 22m ago &nbsp;|&nbsp; Schedule &nbsp;|&nbsp; Share</span>
+</div>
+<div class="pill-row">
+  <span class="pill">📅 Date mode: relative</span>
+  <span class="pill">📅 Unit: days</span>
+  <span class="pill">📅 Value: 2</span>
+  <span class="pill">📅 Start: 1900-01-01</span>
+  <span class="pill">📅 End: 2999-12-31</span>
+</div>
+<div class="content">
+  <div class="card">
+    <div class="card-title">Pipeline run details</div>
+    <div class="card-sub">Displays individual pipeline execution records for the selected date range, groups, and job filters, including status, duration, and record counts.</div>
+    <table>
+      <thead>
+        <tr><th>run_start_ts</th><th>run_end_ts</th><th>run_date</th><th>job_name</th><th>status</th><th>duration_sec</th><th>record_count</th><th>target_table</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2026-01-15 09:01 AM</td><td>2026-01-15 09:02 AM</td><td>2026-01-15</td><td>job_ingest</td><td><span class="bs">Succeeded</span></td><td>14</td><td>3,102</td><td>fact_metrics_hourly</td></tr>
+        <tr><td>2026-01-15 09:11 AM</td><td>2026-01-15 09:12 AM</td><td>2026-01-15</td><td>job_reconcile</td><td><span class="bs">Succeeded</span></td><td>81</td><td>412,390</td><td>dim_reference_daily</td></tr>
+        <tr><td>2026-01-15 09:31 AM</td><td>2026-01-15 09:32 AM</td><td>2026-01-15</td><td>job_transfer</td><td><span class="bs">Succeeded</span></td><td>19</td><td>260</td><td>stage_prelim_hourly</td></tr>
+        <tr><td>2026-01-15 09:32 AM</td><td>2026-01-15 09:34 AM</td><td>2026-01-15</td><td>job_transfer</td><td><span class="bs">Succeeded</span></td><td>23</td><td>1,040</td><td>stage_estimated_hourly</td></tr>
+        <tr><td>2026-01-15 09:33 AM</td><td>2026-01-15 09:34 AM</td><td>2026-01-15</td><td>job_transfer</td><td><span class="bf">Failed</span></td><td>0</td><td>0</td><td>stage_metered_hourly</td></tr>
+        <tr><td>2026-01-15 09:35 AM</td><td>2026-01-15 09:36 AM</td><td>2026-01-15</td><td>job_transfer</td><td><span class="bf">Failed</span></td><td>0</td><td>0</td><td>stage_actuals_hourly</td></tr>
+        <tr><td>2026-01-15 11:01 AM</td><td>2026-01-15 11:02 AM</td><td>2026-01-15</td><td>job_validate</td><td><span class="bs">Succeeded</span></td><td>5</td><td>4,710</td><td>fact_scheduled_hourly</td></tr>
+      </tbody>
+    </table>
+    <div class="pager">
+      <span class="pb">&lt;</span>
+      <span class="pb on">1</span>
+      <span class="pb">2</span>
+      <span class="pb">&gt;</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Success vs failure</div>
+    <div class="card-sub">Shows the count of successful and failed pipeline runs for the selected date range, group, and job filters.</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#D85A30;"></span>Failed</span>
+      <span><span class="ld" style="background:#1D9E75;"></span>Succeeded</span>
+    </div>
+    <canvas id="svfChart" width="1130" height="240"></canvas>
+  </div>
+</div>
+<div class="footer">
+  All dashboard names, pipeline names, table names, metrics, and sample values are anonymized for portfolio demonstration purposes.
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('svfChart'),{type:'bar',data:{labels:['Failed','Succeeded'],datasets:[{data:[8,47],backgroundColor:['#D85A30','#1D9E75'],borderRadius:3,barThickness:120}]},options:{responsive:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#888780',font:{size:13}}},y:{title:{display:true,text:'Count of run_status',font:{size:11},color:'#888780'},ticks:{color:'#888780'},grid:{color:'rgba(0,0,0,0.07)'}}}}});
+</script>
+</body>
+</html>
