@@ -1,28 +1,28 @@
-# ICAP Curation
+# Capacity Curation Framework
 
 ## Overview
 
-This project demonstrates a large-scale Installed Capacity (ICAP) curation solution implemented using Azure Databricks, Delta Lake, and Spark.
+This project demonstrates a large-scale capacity curation framework designed to transform effective-dated market, resource, ownership, and asset attribute data into a trusted historical dataset.
 
-The solution transforms effective-dated market and resource ownership data into a trusted, point-in-time historical dataset suitable for capacity market reporting, regulatory compliance, financial analysis, and operational planning.
+The framework supports point-in-time reporting, regulatory analysis, portfolio analysis, operational planning, and enterprise analytics.
 
-The project was designed to solve one of the most common challenges in energy and utility analytics: reconstructing the exact state of ownership and installed capacity on any given business date.
+All table names, field names, source-system references, and organization-specific terms have been anonymized and generalized for public portfolio use.
 
 ---
 
 ## Business Problem
 
-Energy market data is inherently time-dependent.
+Capacity-related energy data is inherently time-dependent.
 
-Resource ownership, fuel types, zonal assignments, capacity values, and operational characteristics frequently change over time.
+Resource ownership, asset classifications, reporting zones, capacity values, and operational characteristics can change over time.
 
 Traditional ETL approaches often overwrite historical values, making it difficult to answer questions such as:
 
-- Who owned a generating unit on a specific date?
-- What was the installed capacity position of an organization last year?
-- Which zone was a resource assigned to at that point in time?
-- How did ownership percentages change historically?
-- What was the historical ICAP exposure by company or market participant?
+* Which participant owned a resource on a specific date?
+* What was the capacity position for a participant during a historical period?
+* Which reporting region was a resource assigned to at that point in time?
+* How did ownership percentages change over time?
+* What was the historical capacity exposure by participant, resource, region, or classification?
 
 Accurate answers require point-in-time reconstruction using effective-dated source data.
 
@@ -30,40 +30,48 @@ Accurate answers require point-in-time reconstruction using effective-dated sour
 
 ## Solution
 
-The ICAP Curation framework creates daily historical snapshots using effective-date logic.
+The Capacity Curation Framework creates daily historical capacity snapshots using effective-dated logic.
 
-The system evaluates both ownership records and resource attributes against a business date and only selects records valid for that date.
+The framework evaluates ownership records, resource records, classification records, and reference records against a business date and selects only records valid for that date.
 
 ```sql
-effectiveday <= business_date
-and terminationday > business_date
+effective_start_date <= business_date
+and effective_end_date > business_date
 ```
 
-This allows the platform to accurately reconstruct historical states without storing redundant daily snapshots in source systems.
+This allows the platform to reconstruct historical states accurately without exposing source-specific field names or source-system implementation details.
 
 ---
 
-## Architecture
+## High-Level Architecture
 
 ```text
                 SOURCE SYSTEMS
 
-       +--------------------------+
-       | Resource Ownership Data |
-       +--------------------------+
+       +-----------------------------+
+       | Resource Ownership Data     |
+       +-----------------------------+
 
-       +--------------------------+
-       | Resource Definition Data |
-       +--------------------------+
+       +-----------------------------+
+       | Resource Attribute Data     |
+       +-----------------------------+
 
-       +--------------------------+
-       | Market Reference Data    |
-       +--------------------------+
+       +-----------------------------+
+       | Capacity Measurement Data   |
+       +-----------------------------+
+
+       +-----------------------------+
+       | Classification Reference    |
+       +-----------------------------+
+
+       +-----------------------------+
+       | Market Reference Data       |
+       +-----------------------------+
 
                     |
                     v
 
-          ICAP CURATION ENGINE
+          CAPACITY CURATION ENGINE
 
                     |
       +-------------+-------------+
@@ -75,7 +83,7 @@ This allows the platform to accurately reconstruct historical states without sto
                     |
                     v
 
-           CURATED ICAP DATASET
+        CURATED CAPACITY DATASET
 
                     |
                     v
@@ -99,17 +107,17 @@ Generates accurate daily capacity positions.
 
 Processes multiple years of historical data.
 
-### Large Scale Processing
+### Large-Scale Processing
 
-Optimized for billions of records using Spark.
+Designed for high-volume distributed processing.
 
 ### Auditability
 
-Preserves effective dates and source lineage.
+Preserves source timing context and load metadata.
 
 ### Incremental Processing
 
-Supports efficient daily updates.
+Supports efficient daily refreshes.
 
 ---
 
@@ -117,32 +125,40 @@ Supports efficient daily updates.
 
 ```text
 Select Business Date
-         |
-         v
+          |
+          v
 
 Load Ownership Records
-         |
-         v
+          |
+          v
 
-Load Resource Definitions
-         |
-         v
+Load Resource Attribute Records
+          |
+          v
 
-Apply Effective-Date Logic
-         |
-         v
+Load Capacity Measurement Records
+          |
+          v
 
-Join Ownership + Resource Data
-         |
-         v
+Load Reference Data
+          |
+          v
+
+Apply Effective-Dated Logic
+          |
+          v
+
+Join Ownership + Resource + Reference Data
+          |
+          v
 
 Calculate Capacity Position
-         |
-         v
+          |
+          v
 
 Generate Curated Output
-         |
-         v
+          |
+          v
 
 Validation & Reconciliation
 ```
@@ -151,18 +167,24 @@ Validation & Reconciliation
 
 ## Effective-Dated Data Model
 
-Source systems typically maintain records with:
+Source systems typically maintain records using effective-dated history.
+
+Anonymized example fields:
 
 ```text
-effective_day
+effective_start_date
 
-termination_day
+effective_end_date
 
-resource_id
+resource_identifier
 
-organization_id
+participant_identifier
 
-owned_mw
+capacity_value
+
+ownership_percentage
+
+source_load_timestamp
 ```
 
 The curation engine evaluates each record against a target business date.
@@ -172,8 +194,8 @@ Example:
 ```text
 Record A
 
-Effective Day:   2024-01-01
-Termination Day: 2024-06-01
+Effective Start Date: 2024-01-01
+Effective End Date:   2024-06-01
 
 Valid Between:
 
@@ -184,86 +206,171 @@ Valid Between:
 
 ## Historical Processing Strategy
 
-The framework supports:
+The framework supports several processing modes.
 
 ### Daily Loads
 
-Used for production operations.
+Used for production operations and routine refreshes.
 
-### Monthly Backfill
+### Monthly Backfills
 
-Used for historical rebuilds.
+Used for controlled historical rebuilds.
 
 ### Multi-Year Historical Loads
 
 Used for:
 
-- Initial deployment
-- Data correction
-- Audit requests
-- Capacity studies
+* Initial deployment
+* Data correction
+* Audit requests
+* Historical studies
+* Large-scale validation
 
 ---
 
-## Example Curated Fields
+## Example Curated Data Model
+
+Example anonymized output fields:
 
 ```text
 business_date
 
-organization_id
+participant_identifier
 
-organization_name
+participant_name
 
-resource_id
+resource_identifier
 
 resource_name
 
-zone_name
+reporting_region
 
-fuel_type
+primary_classification
 
-resource_type
+secondary_classification
 
-owned_mw
+resource_category
 
-installed_capacity_mw
+capacity_value
 
-ownership_factor
+allocated_capacity_value
 
-effective_day
+ownership_percentage
 
-termination_day
+effective_start_date
 
-created_timestamp
+effective_end_date
 
-modified_timestamp
+record_created_timestamp
+
+record_modified_timestamp
+```
+
+---
+
+## Example Business Relationships
+
+```text
+Capacity Record
+      |
+      +---- Ownership Attributes
+      |
+      +---- Resource Attributes
+      |
+      +---- Classification Attributes
+      |
+      +---- Regional Reference Attributes
+      |
+      v
+
+Curated Capacity Record
+```
+
+---
+
+## Example Join Architecture
+
+```text
+Capacity Measurement Data
+      |
+      +---- Ownership Reference
+      |
+      +---- Resource Attribute Reference
+      |
+      +---- Classification Reference
+      |
+      +---- Market / Region Reference
+      |
+      v
+
+Curated Capacity Dataset
+```
+
+---
+
+## Business Rule Examples
+
+### Ownership Allocation
+
+Capacity values can be allocated by ownership percentage.
+
+```text
+Capacity Value = 100 MW
+
+Ownership Percentage = 50%
+
+Allocated Capacity Value = 50 MW
+```
+
+---
+
+### Point-in-Time Attribute Selection
+
+Resource attributes are selected based on the business date.
+
+```text
+Use the resource classification valid on the reporting date.
+```
+
+---
+
+### Regional Assignment
+
+Resources are mapped to reporting regions using the valid reference relationship for the business date.
+
+```text
+Resource + Business Date -> Reporting Region
 ```
 
 ---
 
 ## Performance Optimization
 
-Several optimization techniques were implemented:
+Several optimization techniques are commonly used.
+
+### Historical Windowing
+
+Large historical periods are processed in smaller windows.
 
 ### Monthly Processing Windows
 
-Large historical periods are broken into smaller batches.
+Historical loads can be broken into monthly or multi-month batches.
 
 ### Predicate Pushdown
 
-Filters applied as early as possible.
+Filters are applied as early as possible.
 
-### Delta Lake Optimization
+### Partition Pruning
 
-Leverages partition pruning and optimized storage.
+Curated data can be partitioned by reporting period.
 
 ### Parallel Processing
 
-Historical ranges processed concurrently.
+Independent historical windows can be processed concurrently.
 
 ### Incremental Logic
 
-Avoids unnecessary full reloads.
+Daily production runs avoid unnecessary full reloads.
 
 ---
 
@@ -281,15 +388,15 @@ Validates uniqueness of business keys.
 
 ### Null Analysis
 
-Identifies missing critical fields.
+Identifies missing critical business attributes.
 
 ### Historical Reconciliation
 
-Compares outputs against source systems.
+Compares curated outputs against source totals or prior baselines.
 
 ### Ownership Verification
 
-Confirms ownership percentages are accurate.
+Confirms ownership percentages and allocated values reconcile within expected thresholds.
 
 ---
 
@@ -298,30 +405,119 @@ Confirms ownership percentages are accurate.
 ```sql
 select
     business_date,
-    organization_id,
-    resource_id,
+    participant_identifier,
+    resource_identifier,
     count(*) as record_count
-from installed_capacity_daily
+from curated_capacity_dataset
 group by
     business_date,
-    organization_id,
-    resource_id
+    participant_identifier,
+    resource_identifier
 having count(*) > 1;
 ```
 
 ---
 
+## Data Quality Controls
+
+The framework checks for:
+
+* Missing resource identifiers
+* Missing participant identifiers
+* Invalid effective-date ranges
+* Overlapping effective-dated records
+* Missing resource attributes
+* Missing regional mappings
+* Negative or unexpected capacity values
+* Duplicate business keys
+
+---
+
+## Operational Considerations
+
+### Runtime
+
+Historical backfills can process multiple years of daily data.
+
+### Memory
+
+Effective-dated joins require careful distributed processing design.
+
+### Partitioning
+
+Output partitioning improves query and validation performance.
+
+### Restartability
+
+Windowed processing allows failed ranges to be rerun safely.
+
+### Auditability
+
+Preserving effective dates and load metadata improves troubleshooting.
+
+---
+
+## Business Benefits
+
+### Improved Reporting Accuracy
+
+Historical reports reflect the correct point-in-time business state.
+
+### Faster Analytics
+
+Analysts use curated datasets instead of manually reconstructing history.
+
+### Regulatory Support
+
+The framework supports audit and compliance reporting.
+
+### Reduced Operational Risk
+
+Centralized business logic reduces inconsistent reporting.
+
+### Better Planning
+
+Historical capacity trends support forecasting, resource planning, and strategic analysis.
+
+---
+
+## Example Use Cases
+
+### Capacity Market Reporting
+
+Historical capacity positions by participant, resource, region, and classification.
+
+### Ownership Analysis
+
+Track ownership changes over time.
+
+### Resource Portfolio Analysis
+
+Analyze capacity exposure by participant, asset category, and reporting region.
+
+### Regulatory Audits
+
+Reconstruct historical capacity positions for prior business dates.
+
+### Executive Reporting
+
+Provide trusted capacity metrics to stakeholders.
+
+---
+
 ## Technology Stack
 
-- Azure Databricks
-- Spark SQL
-- PySpark
-- Delta Lake
-- Unity Catalog
-- Azure Data Lake Storage Gen2
-- Azure Data Factory
-- GitLab CI/CD
-- Databricks Workflows
+Typical implementation:
+
+* Azure Databricks
+* Spark SQL
+* PySpark
+* Delta Lake
+* Unity Catalog
+* Cloud object storage
+* Workflow orchestration
+* Git-based CI/CD
+* Enterprise reporting tools
 
 ---
 
@@ -333,7 +529,7 @@ Reconstructs exact historical states.
 
 ### Effective-Dated Complexity
 
-Handles overlapping ownership and attribute records.
+Handles changing ownership, resource, and classification records.
 
 ### Large Data Volumes
 
@@ -341,87 +537,41 @@ Supports multi-year historical processing.
 
 ### Audit Requirements
 
-Provides traceable lineage and reproducibility.
+Provides traceability and reproducibility.
 
 ### Reporting Consistency
 
-Creates a single trusted source for capacity reporting.
-
----
-
-## Business Benefits
-
-### Improved Reporting Accuracy
-
-Historical reports reflect actual point-in-time values.
-
-### Faster Analytics
-
-Analysts query curated datasets rather than reconstructing history.
-
-### Regulatory Compliance
-
-Supports audit and compliance requirements.
-
-### Reduced Operational Risk
-
-Centralized business logic reduces inconsistencies.
-
-### Better Capacity Planning
-
-Provides reliable historical capacity trends.
-
----
-
-## Example Use Cases
-
-### Capacity Market Reporting
-
-Historical capacity positions by organization.
-
-### Ownership Analysis
-
-Track ownership changes over time.
-
-### Resource Portfolio Management
-
-Analyze capacity exposure by resource type.
-
-### Regulatory Audits
-
-Reconstruct historical market positions.
-
-### Executive Reporting
-
-Provide trusted capacity metrics to business stakeholders.
+Creates a trusted source for capacity reporting.
 
 ---
 
 ## Lessons Learned
 
-Key lessons from the implementation:
+Key lessons from capacity curation design:
 
-- Effective-dated joins require careful design.
-- Historical reconstruction should be deterministic and reproducible.
-- Daily and historical processing logic should remain identical.
-- Validation is critical when processing time-based business data.
-- Performance optimization becomes increasingly important as historical windows grow.
+* Effective-dated joins require careful design.
+* Historical reconstruction should be deterministic and reproducible.
+* Daily and historical processing logic should remain consistent.
+* Validation is critical when processing time-based business data.
+* Preserving source timing context improves auditability.
+* Windowed processing improves performance and restartability.
 
 ---
 
 ## Future Enhancements
 
-Potential future enhancements include:
+Potential future improvements include:
 
-- Automated anomaly detection
-- AI-assisted reconciliation
-- Real-time capacity monitoring
-- Data lineage visualization
-- Self-service historical replay
-- Automated root cause analysis
+* Automated anomaly detection
+* AI-assisted reconciliation
+* Near real-time capacity monitoring
+* Data lineage visualization
+* Self-service historical replay
+* Automated root cause analysis
+* Predictive planning models
 
 ---
 
 ## Key Takeaway
 
-The ICAP Curation framework transforms complex effective-dated ownership and resource data into a trusted historical capacity dataset that supports reporting, compliance, analytics, and operational decision-making across large-scale energy market environments.
+The Capacity Curation Framework transforms complex effective-dated ownership, resource, classification, and capacity data into a trusted historical dataset that supports reporting, compliance, analytics, forecasting, and operational decision-making across large-scale energy market environments.
