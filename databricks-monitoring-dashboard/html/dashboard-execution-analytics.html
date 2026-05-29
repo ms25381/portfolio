@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Enterprise Pipeline Execution Analytics</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1a1a1a;background:#f0efe8;width:1200px;}
+.top-bar{background:#fff;border-bottom:1px solid #e0dfd8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.top-bar-title{font-size:16px;font-weight:600;color:#1a1a1a;}
+.tab{font-size:12px;font-weight:600;color:#185FA5;border-bottom:2px solid #185FA5;padding-bottom:2px;}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 20px;background:#f7f6f0;border-bottom:1px solid #e0dfd8;}
+.pill{background:#fff;border:1px solid #d3d1c7;border-radius:20px;padding:3px 10px;font-size:11px;color:#5f5e5a;}
+.content{padding:16px 20px;}
+.card{background:#fff;border:1px solid #d3d1c7;border-radius:8px;padding:16px;}
+.card-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.card-sub{font-size:11px;color:#888780;margin-bottom:12px;}
+.legend{display:flex;gap:14px;font-size:11px;color:#5f5e5a;margin-bottom:8px;justify-content:flex-end;}
+.ld{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle;}
+.footer{margin-top:32px;padding:16px 20px 24px;text-align:center;font-size:10.5px;color:#b0ada8;border-top:1px solid #e0dfd8;}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:20px;">
+    <span class="top-bar-title">Enterprise Pipeline Execution Analytics</span>
+    <span class="tab">Execution analytics</span>
+  </div>
+  <span style="font-size:11px;color:#888780;">Last refreshed: 23h ago &nbsp;|&nbsp; Schedule &nbsp;|&nbsp; Share</span>
+</div>
+<div class="pill-row">
+  <span class="pill">📅 Date mode: relative</span>
+  <span class="pill">📅 Unit: days</span>
+  <span class="pill">📅 Value: 2</span>
+  <span class="pill">📅 Start: 1900-01-01</span>
+  <span class="pill">📅 End: 2999-12-31</span>
+</div>
+<div class="content">
+  <div class="card">
+    <div class="card-title">Pipeline execution status by group</div>
+    <div class="card-sub">Shows the number of successful and failed pipeline job executions, grouped by pipeline group, for the selected date range and filters.</div>
+    <div class="legend">
+      <span><span class="ld" style="background:#D85A30;"></span>Failed</span>
+      <span><span class="ld" style="background:#1D9E75;"></span>Succeeded</span>
+    </div>
+    <canvas id="groupChart" width="1130" height="320"></canvas>
+  </div>
+</div>
+<div class="footer">
+  All dashboard names, pipeline names, table names, metrics, and sample values are anonymized for portfolio demonstration purposes.
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('groupChart'),{type:'bar',data:{labels:['group_alpha','group_beta'],datasets:[{label:'Succeeded',data:[20,11],backgroundColor:'#1D9E75',borderRadius:3,barThickness:90},{label:'Failed',data:[8,0],backgroundColor:'#D85A30',borderRadius:3,barThickness:90}]},options:{indexAxis:'y',responsive:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,title:{display:true,text:'Sum of run_count',font:{size:11},color:'#888780'},ticks:{color:'#888780',font:{size:12}},grid:{color:'rgba(0,0,0,0.07)'}},y:{stacked:true,ticks:{color:'#888780',font:{size:14}},grid:{display:false}}}}});
+</script>
+</body>
+</html>
