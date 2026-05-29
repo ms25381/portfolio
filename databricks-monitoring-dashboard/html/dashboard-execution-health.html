@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Enterprise Pipeline Health Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1a1a1a;background:#f0efe8;width:1200px;}
+.top-bar{background:#fff;border-bottom:1px solid #e0dfd8;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.top-bar-title{font-size:16px;font-weight:600;color:#1a1a1a;}
+.tab{font-size:12px;font-weight:600;color:#185FA5;border-bottom:2px solid #185FA5;padding-bottom:2px;}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;padding:8px 20px;background:#f7f6f0;border-bottom:1px solid #e0dfd8;align-items:center;}
+.pill{background:#fff;border:1px solid #d3d1c7;border-radius:20px;padding:3px 10px;font-size:11px;color:#5f5e5a;}
+.reset{margin-left:auto;font-size:11px;color:#185FA5;cursor:pointer;}
+.content{padding:16px 20px;}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;}
+.kpi{background:#fff;border:1px solid #d3d1c7;border-radius:8px;padding:14px 16px;}
+.kpi-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#888780;margin-bottom:8px;}
+.kpi-val{font-size:28px;font-weight:600;}
+.success{color:#1D9E75;}.danger{color:#D85A30;}.info{color:#185FA5;}
+.charts-row{display:grid;grid-template-columns:1fr 1.6fr;gap:12px;margin-bottom:14px;}
+.card{background:#fff;border:1px solid #d3d1c7;border-radius:8px;padding:16px;}
+.card-title{font-size:12px;font-weight:600;margin-bottom:12px;color:#1a1a1a;}
+.legend{display:flex;gap:14px;font-size:11px;color:#5f5e5a;margin-bottom:8px;justify-content:flex-end;}
+.ld{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;font-weight:600;color:#888780;text-align:left;padding:8px 10px;border-bottom:1px solid #e0dfd8;background:#f7f6f0;}
+td{font-size:12px;padding:8px 10px;border-bottom:1px solid #e0dfd8;}
+tr:nth-child(even) td{background:#fafaf7;}
+.hi{font-weight:600;color:#D85A30;}
+svg text{font-family:Arial,Helvetica,sans-serif;}
+.footer{margin-top:32px;padding:16px 20px 24px;text-align:center;font-size:10.5px;color:#b0ada8;border-top:1px solid #e0dfd8;}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:20px;">
+    <span class="top-bar-title">Enterprise Pipeline Health Dashboard</span>
+    <span class="tab">Overview</span>
+  </div>
+  <span style="font-size:11px;color:#888780;">Last refreshed: 10m ago &nbsp;|&nbsp; Schedule &nbsp;|&nbsp; Share</span>
+</div>
+<div class="pill-row">
+  <span class="pill">📅 Date mode: relative</span>
+  <span class="pill">📅 Relative unit: days</span>
+  <span class="pill">📅 Relative value: 2</span>
+  <span class="pill">📅 Start date: 1900-01-01</span>
+  <span class="pill">📅 End date: 2999-12-31</span>
+  <span class="reset">Reset all to default</span>
+</div>
+<div class="content">
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-lbl">Succeeded runs</div><div class="kpi-val success">47</div></div>
+    <div class="kpi"><div class="kpi-lbl">Failed runs</div><div class="kpi-val danger">8</div></div>
+    <div class="kpi"><div class="kpi-lbl">Total runs</div><div class="kpi-val info">55</div></div>
+    <div class="kpi"><div class="kpi-lbl">Failure rate</div><div class="kpi-val danger">14.55%</div></div>
+    <div class="kpi"><div class="kpi-lbl">Success rate</div><div class="kpi-val success">85.45%</div></div>
+  </div>
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-title">Failures by pipeline group</div>
+      <canvas id="failChart" width="400" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Success vs. failure by job</div>
+      <div class="legend">
+        <span><span class="ld" style="background:#185FA5;"></span>Sum of succeeded</span>
+        <span><span class="ld" style="background:#D85A30;"></span>Sum of failed</span>
+      </div>
+      <canvas id="jobChart" width="640" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Worst performing jobs</div>
+    <table>
+      <thead>
+        <tr><th>pipeline_group</th><th>job_name</th><th>Sum of failed</th><th>Sum of total_runs</th><th>Sum of failure_rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>group_alpha</td><td>job_transfer</td><td class="hi">8</td><td>16</td><td class="hi">0.50</td></tr>
+        <tr><td>group_alpha</td><td>job_ingest</td><td>0</td><td>4</td><td>0.00</td></tr>
+        <tr><td>group_alpha</td><td>job_transform</td><td>0</td><td>4</td><td>0.00</td></tr>
+        <tr><td>group_alpha</td><td>job_validate</td><td>0</td><td>8</td><td>0.00</td></tr>
+        <tr><td>group_beta</td><td>job_publish</td><td>0</td><td>8</td><td>0.00</td></tr>
+        <tr><td>group_alpha</td><td>job_reconcile</td><td>0</td><td>4</td><td>0.00</td></tr>
+        <tr><td>group_beta</td><td>job_extract</td><td>0</td><td>3</td><td>0.00</td></tr>
+        <tr><td>group_beta</td><td>job_report</td><td>0</td><td>4</td><td>0.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">
+  All dashboard names, pipeline names, table names, metrics, and sample values are anonymized for portfolio demonstration purposes.
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('failChart'),{type:'bar',data:{labels:['group_alpha','group_beta'],datasets:[{label:'Sum of failed',data:[8,0],backgroundColor:'#D85A30',borderRadius:3,barThickness:70}]},options:{responsive:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'pipeline_group',font:{size:11},color:'#888780'},grid:{display:false},ticks:{color:'#888780',font:{size:12}}},y:{title:{display:true,text:'Sum of failed',font:{size:11},color:'#888780'},ticks:{color:'#888780',stepSize:2},grid:{color:'rgba(0,0,0,0.07)'},max:10}}}});
+new Chart(document.getElementById('jobChart'),{type:'bar',data:{labels:['job_publish','job_extract','job_ingest','job_report','job_reconcile','job_transfer','job_validate','job_transform'],datasets:[{label:'Succeeded',data:[8,3,4,4,4,8,8,4],backgroundColor:'#185FA5',borderRadius:2},{label:'Failed',data:[0,0,0,0,0,8,0,0],backgroundColor:'#D85A30',borderRadius:2}]},options:{responsive:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,title:{display:true,text:'job_name',font:{size:11},color:'#888780'},grid:{display:false},ticks:{color:'#888780',font:{size:10},maxRotation:40,autoSkip:false}},y:{stacked:true,ticks:{color:'#888780'},grid:{color:'rgba(0,0,0,0.07)'}}}}});
+</script>
+</body>
+</html>
