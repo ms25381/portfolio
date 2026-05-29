@@ -1,100 +1,103 @@
-# LMP Curation
+# Market Pricing Curation Framework
 
 ## Overview
 
-This project demonstrates a large-scale Locational Marginal Price (LMP) curation platform implemented using Azure Databricks, Delta Lake, and Spark.
+This project demonstrates a large-scale market pricing curation framework implemented using a cloud lakehouse architecture.
 
-The solution consolidates Day-Ahead (DA) and Real-Time (RT) electricity market pricing data into a trusted analytical dataset used for energy market analysis, settlement validation, congestion studies, transmission planning, and executive reporting.
+The solution consolidates forward-looking market price data and real-time market price data into a trusted analytical dataset used for market analysis, settlement validation, price component analysis, congestion studies, transmission planning, operational monitoring, and executive reporting.
 
-The platform processes billions of records while maintaining historical accuracy, auditability, and high-performance query capabilities.
+The framework is designed to process very large time-series datasets while maintaining historical accuracy, auditability, and high-performance query access.
+
+All table names, field names, source-system names, and organization-specific identifiers have been anonymized and generalized for public portfolio use.
 
 ---
 
 ## Business Problem
 
-Electricity markets generate massive volumes of pricing data every hour.
+Electricity markets generate high-volume pricing data at frequent intervals.
 
-Each pricing point (PNode) contains multiple price components:
+Each pricing location can contain multiple price components, such as:
 
-- Total LMP
-- Congestion Price
-- Loss Price
-- Residual Adjustments
-- Congestion Rates
-- Loss Rates
+* Total market price
+* Congestion component
+* Loss component
+* Adjustment component
+* Rate component
+* Settlement-related component
 
-Challenges include:
+Common challenges include:
 
-- Multiple source systems
-- Billions of records
-- Historical corrections
-- Missing reference data
-- Duplicate records
-- Time zone complexities
-- Settlement reconciliation requirements
+* Multiple pricing source systems
+* Very large historical datasets
+* Historical corrections
+* Missing reference mappings
+* Duplicate records
+* Time zone complexity
+* Market settlement reconciliation
+* High-performance analytical requirements
 
-Without a curated solution, analysts spend significant effort reconstructing pricing history.
+Without a curated solution, analysts spend significant time reconstructing pricing history and reconciling data across source systems.
 
 ---
 
 ## Solution
 
-The LMP Curation framework provides:
+The Market Pricing Curation Framework provides:
 
-- Historical LMP repository
-- Day-Ahead and Real-Time integration
-- PNode enrichment
-- Zone enrichment
-- Price component standardization
-- Data quality validation
-- High-performance analytical access
+* Historical market pricing repository
+* Forward market and real-time market integration
+* Pricing location enrichment
+* Regional mapping enrichment
+* Price component standardization
+* Data quality validation
+* High-performance analytical access
 
-The curated dataset becomes the trusted source for all downstream reporting and analytics.
+The curated dataset becomes a trusted source for downstream reporting, market analytics, settlement validation, and strategic decision-making.
 
 ---
 
-## Architecture
+## High-Level Architecture
 
 ```text
              MARKET SOURCE SYSTEMS
 
        +----------------------------+
-       | Day Ahead LMP              |
+       | Forward Market Pricing     |
        +----------------------------+
 
        +----------------------------+
-       | Real Time LMP              |
+       | Real-Time Market Pricing   |
        +----------------------------+
 
        +----------------------------+
-       | PNode Definitions          |
+       | Pricing Location Reference |
        +----------------------------+
 
        +----------------------------+
-       | Zone Reference Data        |
+       | Regional Reference Data    |
        +----------------------------+
 
                     |
                     v
 
-             LMP CURATION ENGINE
+        MARKET PRICING CURATION ENGINE
 
                     |
         +-----------+-----------+
         |                       |
         v                       v
 
-    DA Processing         RT Processing
+ Forward Market Logic    Real-Time Market Logic
 
                     |
                     v
 
-          Reference Data Joins
+          Reference Data Enrichment
 
                     |
                     v
 
-         Curated LMP Dataset
+       Curated Market Pricing Dataset
 
                     |
                     v
@@ -106,59 +109,78 @@ The curated dataset becomes the trusted source for all downstream reporting and 
 
 ## Key Features
 
-### DA and RT Consolidation
+### Forward and Real-Time Price Consolidation
 
-Combines Day-Ahead and Real-Time market pricing.
+Combines forecasted, scheduled, or forward-looking market prices with real-time observed market prices.
 
 ### Historical Retention
 
-Maintains complete historical pricing records.
+Maintains complete historical pricing records for audit, trend analysis, and market studies.
 
-### PNode Enrichment
+### Pricing Location Enrichment
 
-Adds business-friendly metadata.
+Adds business-friendly metadata for pricing points, nodes, hubs, interfaces, or other market locations.
 
-### Zone Mapping
+### Regional Mapping
 
-Associates PNodes with transmission zones.
+Associates pricing locations with reporting regions, zones, or business-defined groupings.
 
 ### Data Quality Validation
 
-Detects missing and invalid data.
+Detects duplicates, missing reference mappings, missing price components, and invalid records.
 
 ### High Performance
 
-Supports large-scale analytical workloads.
+Optimized for large-scale analytical workloads and time-series queries.
 
 ---
 
-## Source Systems
+## Source Domains
 
-### Market Pricing Sources
+### Market Pricing Data
+
+Generalized pricing inputs include:
 
 ```text
-s_pnodelmp_da
-s_pnodelmp_rt
+Forward market price data
+
+Real-time market price data
+
+Corrected market price data
+
+Historical pricing data
 ```
+
+---
 
 ### Reference Data
 
+Generalized reference inputs include:
+
 ```text
-s_pnode
+Pricing location reference
 
-s_pnodexmssnzonerel
+Location-to-region relationship reference
 
-s_xmssnzonedef
+Region definition reference
+
+Market dimension reference
 ```
+
+---
 
 ### Business Metadata
 
+Generalized business metadata includes:
+
 ```text
-Market Dimensions
+Market attributes
 
-PNode Attributes
+Pricing location attributes
 
-Zone Definitions
+Regional attributes
+
+Reporting categories
 ```
 
 ---
@@ -166,19 +188,19 @@ Zone Definitions
 ## Core Data Flow
 
 ```text
-Load DA Pricing
+Load Forward Market Pricing
         |
         v
 
-Load RT Pricing
+Load Real-Time Market Pricing
         |
         v
 
-Load PNode Definitions
+Load Pricing Location Reference
         |
         v
 
-Load Zone Relationships
+Load Regional Relationship Reference
         |
         v
 
@@ -190,7 +212,7 @@ Enrich Pricing Data
         |
         v
 
-Generate Curated Dataset
+Generate Curated Pricing Dataset
         |
         v
 
@@ -199,59 +221,61 @@ Validation & Reconciliation
 
 ---
 
-## Example Curated Fields
+## Example Curated Data Model
+
+Example anonymized output fields:
 
 ```text
-hour_utc
+pricing_timestamp_utc
 
-hour_ept
+pricing_timestamp_local
 
-pnodeid
+pricing_location_identifier
 
-pnodename
+pricing_location_name
 
-pnodetype
+pricing_location_type
 
-pnode_zone_name
+reporting_region_name
 
-totallmp
+total_price_value
 
-congestionprice
+congestion_price_component
 
-lossprice
+loss_price_component
 
-residadjcongprice
+adjustment_price_component
 
-residadjlossprice
+rate_component
 
-congrate
+market_type_indicator
 
-lossrate
+source_created_timestamp
 
-dayahead_flag
+source_modified_timestamp
 
-createddate_utc
+load_timestamp
 
-modifieddate_utc
+partition_period_key
 ```
 
 ---
 
 ## Time Zone Handling
 
-The platform supports:
+The platform supports both technical and business reporting time zones.
 
 ### UTC Storage
 
-All source timestamps retained in UTC.
+Source timestamps are standardized and retained in UTC for consistency and auditability.
 
-### EPT Reporting
+### Local Market Reporting Time
 
-Business reporting uses Eastern Prevailing Time (EPT).
+Business reporting can use a local market time zone representation.
 
-### DST Support
+### Daylight Saving Time Support
 
-Handles Daylight Savings Time transitions.
+The framework handles daylight saving time transitions and local time ambiguity.
 
 Example:
 
@@ -260,72 +284,72 @@ UTC Timestamp
 
 2025-01-01 05:00:00
 
-EPT Timestamp
+Local Market Timestamp
 
 2025-01-01 00:00:00
 ```
 
 ---
 
-## PNode Enrichment
+## Pricing Location Enrichment
 
-The platform enriches pricing records with business metadata.
+Pricing records are enriched with business metadata.
 
 Example:
 
 ```text
-PNode ID
-     |
-     v
+Pricing Location ID
+        |
+        v
 
-PNode Name
-     |
-     v
+Pricing Location Name
+        |
+        v
 
-PNode Type
-     |
-     v
+Pricing Location Type
+        |
+        v
 
-Transmission Zone
+Reporting Region
 ```
 
-Supported node types include:
+Supported generalized location categories may include:
 
 ```text
-HUB
+Hub
 
-AGGREGATE
+Aggregate
 
-EHVAGG
+Interface
 
-INTERFACE
+External Point
 
-EXT
+Real-Time Location
 
-RT
+Residual / Settlement Location
 
-RESIDUAL_METERED_ED
+Custom Reporting Location
 ```
 
 ---
 
-## Zone Mapping
+## Regional Mapping
 
-Zone enrichment uses:
+Regional enrichment uses generalized relationships such as:
 
 ```text
-s_pnode
-     |
-     v
+Pricing Location Reference
+        |
+        v
 
-s_pnodexmssnzonerel
-     |
-     v
+Location-to-Region Relationship
+        |
+        v
 
-s_xmssnzonedef
+Region Definition Reference
 ```
 
-This mapping allows analysts to aggregate pricing by transmission zone.
+This mapping allows analysts to aggregate pricing by reporting region, zone, market area, or other business-defined grouping.
 
 ---
 
@@ -335,15 +359,16 @@ The curation process performs automated validation.
 
 ### Duplicate Detection
 
-Ensures uniqueness of key business records.
+Ensures uniqueness at the expected business grain.
 
 ### Null Analysis
 
-Identifies missing:
+Identifies missing values in:
 
-- Zone names
-- PNode metadata
-- Pricing components
+* Reporting region
+* Pricing location metadata
+* Price components
+* Market type indicator
 
 ### Historical Validation
 
@@ -351,7 +376,11 @@ Verifies completeness of historical loads.
 
 ### Referential Integrity
 
-Validates reference data joins.
+Validates that pricing records map to required reference data.
+
+### Reconciliation
+
+Compares source totals, record counts, and curated outputs against expected thresholds.
 
 ---
 
@@ -359,13 +388,15 @@ Validates reference data joins.
 
 ```sql
 select
-    pnodeid,
-    hour_ept,
+    pricing_location_identifier,
+    pricing_timestamp_local,
+    market_type_indicator,
     count(*) as record_count
-from rt_and_da_lmp_daily
+from curated_market_pricing_dataset
 group by
-    pnodeid,
-    hour_ept
+    pricing_location_identifier,
+    pricing_timestamp_local,
+    market_type_indicator
 having count(*) > 1;
 ```
 
@@ -373,17 +404,13 @@ having count(*) > 1;
 
 ## Performance Optimization
 
-### Delta Lake
+### Delta Lake Storage
 
-Optimized storage and retrieval.
+Optimized storage layout for time-series analytics.
 
 ### Partitioning
 
-Typical partition key:
-
-```text
-hour_month_partkey
-```
+A typical partitioning strategy uses a monthly or daily period key.
 
 Example:
 
@@ -397,15 +424,19 @@ Example:
 
 ### Predicate Pushdown
 
-Limits data scanned.
+Limits scanned data based on date, market type, location, and region filters.
 
 ### Incremental Processing
 
-Processes only changed data.
+Processes only new, modified, or corrected records.
 
-### Parallel Spark Execution
+### Parallel Distributed Execution
 
-Supports billions of records.
+Supports very large historical datasets.
+
+### Optimization and Compaction
+
+Improves query performance for downstream reporting tools.
 
 ---
 
@@ -413,60 +444,76 @@ Supports billions of records.
 
 ### Congestion Analysis
 
-Identify transmission bottlenecks.
+Identify regional congestion patterns and transmission bottlenecks.
 
 ### Market Monitoring
 
-Track price volatility.
+Track price volatility and market behavior.
 
 ### Settlement Validation
 
-Validate settlement calculations.
+Validate settlement-related price components.
 
 ### Transmission Planning
 
-Analyze regional pricing impacts.
+Analyze regional pricing impacts over time.
 
 ### Executive Reporting
 
-Provide market performance metrics.
+Provide high-level market performance metrics.
 
 ---
 
 ## Example KPIs
 
 ```text
-Average LMP
+Average Market Price
 
-Peak LMP
+Peak Market Price
 
-Congestion Cost
+Congestion Component Cost
 
-Loss Cost
+Loss Component Cost
 
 Price Volatility
 
-Zone Average Price
+Regional Average Price
 
 Hub Average Price
 
-DA vs RT Spread
+Forward vs Real-Time Spread
 ```
+
+---
+
+## Historical Preservation
+
+The curated model preserves:
+
+* Historical market prices
+* Corrected pricing records
+* Pricing location changes
+* Regional mapping changes
+* Source load and modification timestamps
+
+This enables accurate point-in-time market reporting.
 
 ---
 
 ## Technology Stack
 
-- Azure Databricks
-- Apache Spark
-- PySpark
-- Spark SQL
-- Delta Lake
-- Unity Catalog
-- Azure Data Lake Storage Gen2
-- Azure Data Factory
-- GitLab CI/CD
-- Tableau
+Typical implementation:
+
+* Azure Databricks
+* Apache Spark
+* PySpark
+* Spark SQL
+* Delta Lake
+* Unity Catalog
+* Cloud object storage
+* Workflow orchestration
+* Git-based CI/CD
+* Enterprise reporting tools
 
 ---
 
@@ -474,23 +521,27 @@ DA vs RT Spread
 
 ### Massive Data Volumes
 
-Supports billions of pricing records.
+Supports very large historical pricing datasets.
 
 ### Historical Accuracy
 
-Preserves historical market conditions.
+Preserves historical and corrected market conditions.
 
 ### Complex Reference Data
 
-Standardizes PNode and zone mappings.
+Standardizes pricing location and regional mappings.
 
-### Performance
+### Time Zone Complexity
 
-Provides sub-second analytical access.
+Handles UTC and local business reporting time.
+
+### High-Performance Analytics
+
+Optimized for repeated time-series queries.
 
 ### Data Quality
 
-Detects and prevents data issues.
+Detects missing mappings, duplicates, and invalid price components.
 
 ---
 
@@ -498,51 +549,54 @@ Detects and prevents data issues.
 
 ### Trusted Pricing Repository
 
-Single source of truth for market prices.
+Creates a single source of truth for market price analytics.
 
 ### Faster Analytics
 
-Eliminates repetitive data preparation.
+Eliminates repetitive data preparation and manual reconciliation.
 
 ### Improved Reporting
 
-Consistent metrics across departments.
+Standardizes pricing metrics across reporting teams.
 
 ### Better Decision Making
 
-Supports market and operational analysis.
+Supports market, operational, settlement, and planning analysis.
 
 ### Reduced Operational Risk
 
-Automated validation improves reliability.
+Automated validation improves reliability and downstream trust.
 
 ---
 
 ## Lessons Learned
 
-Key lessons from implementation:
+Key lessons from large-scale market pricing curation:
 
-- Reference data quality is critical.
-- Time zone handling requires careful design.
-- Historical market data grows rapidly.
-- Partition strategy significantly impacts performance.
-- Automated validation prevents downstream reporting issues.
+* Reference data quality is critical.
+* Time zone handling requires careful design.
+* Historical market data grows rapidly.
+* Partition strategy significantly impacts performance.
+* Duplicate detection must be part of the core design.
+* Automated validation prevents downstream reporting issues.
+* Curated time-series models should preserve both technical and business timestamps.
 
 ---
 
 ## Future Enhancements
 
-Potential enhancements include:
+Potential future enhancements include:
 
-- Real-time streaming LMP ingestion
-- AI-assisted anomaly detection
-- Automated root cause analysis
-- Price forecasting models
-- Market simulation integration
-- Self-service analytics portal
+* Real-time streaming price ingestion
+* AI-assisted anomaly detection
+* Automated root cause analysis
+* Price forecasting models
+* Market simulation integration
+* Self-service analytics portal
+* Data product publishing
 
 ---
 
 ## Key Takeaway
 
-The LMP Curation platform transforms raw electricity market pricing data into a trusted, high-performance analytical dataset that supports reporting, settlement validation, congestion analysis, market monitoring, and strategic decision-making across large-scale energy market environments.
+The Market Pricing Curation Framework transforms raw market pricing data into a trusted, high-performance analytical dataset that supports reporting, settlement validation, congestion analysis, market monitoring, forecasting, and strategic decision-making across large-scale energy market environments.
