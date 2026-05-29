@@ -1,1 +1,85 @@
+# ============================================================
+# SAMPLE ORCHESTRATION CONFIGURATION
+# ============================================================
+# Defines WHEN and HOW a pipeline executes.
+# Orchestration is intentionally separated from:
+# - Schema Contracts
+# - Templates
+# - Runtime Parameters
+#
+# This allows schedules to change without modifying
+# pipeline logic.
+# ============================================================
 
+orchestration_id: daily_customer_load
+
+name: Daily Customer Pipeline
+
+description: >
+  Executes customer ingestion pipeline every day.
+
+enabled: true
+
+schedule:
+
+  type: cron
+
+  expression: "0 2 * * *"
+
+  timezone: America/New_York
+
+execution:
+
+  retry_count: 3
+
+  retry_interval_minutes: 10
+
+  timeout_minutes: 120
+
+  max_concurrent_runs: 1
+
+notifications:
+
+  on_success:
+    - dataops@example.com
+
+  on_failure:
+    - dataops@example.com
+    - platform-support@example.com
+
+dependencies:
+
+  upstream:
+
+    - customer_source_refresh
+
+    - customer_reference_data
+
+  downstream:
+
+    - customer_reporting_pipeline
+
+environment_overrides:
+
+  dev:
+
+    schedule:
+      expression: "0 */4 * * *"
+
+  test:
+
+    schedule:
+      expression: "0 */2 * * *"
+
+  prod:
+
+    schedule:
+      expression: "0 2 * * *"
+
+audit:
+
+  created_by: platform_team
+
+  version: 1.0
+
+  last_updated: 2026-01-01
