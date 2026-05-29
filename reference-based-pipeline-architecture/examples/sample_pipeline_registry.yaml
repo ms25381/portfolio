@@ -1,1 +1,97 @@
+# ============================================================
+# SAMPLE PIPELINE REGISTRY
+# ============================================================
+# Central registry entry that assembles a pipeline
+# from reusable components.
+#
+# The registry contains references only.
+# It does NOT contain:
+# - execution logic
+# - schema definitions
+# - schedules
+# - runtime values
+#
+# Those are delegated to specialized components.
+# ============================================================
 
+pipeline_id: customer_daily_pipeline
+
+name: Customer Daily Pipeline
+
+description: >
+  Daily ingestion and curation pipeline
+  for customer master data.
+
+status: active
+
+version: 1.0
+
+owner:
+
+  team: data_engineering
+
+  contact: dataops@example.com
+
+business_domain: customer
+
+criticality: high
+
+sla_minutes: 60
+
+# ------------------------------------------------------------
+# COMPONENT REFERENCES
+# ------------------------------------------------------------
+
+references:
+
+  schema_contract:
+
+    id: schema_customer_v1
+
+    file: sample_schema_contract.yaml
+
+  pipeline_template:
+
+    id: incremental_customer_template
+
+    file: sample_pipeline_template.yaml
+
+  parameters:
+
+    id: customer_daily_parameters
+
+    file: sample_parameters.yaml
+
+  orchestration:
+
+    id: daily_customer_load
+
+    file: sample_orchestration.yaml
+
+# ------------------------------------------------------------
+# AUDIT INFORMATION
+# ------------------------------------------------------------
+
+audit:
+
+  created_by: platform_team
+
+  created_date: 2026-01-01
+
+  modified_date: 2026-01-01
+
+# ------------------------------------------------------------
+# TAGS
+# ------------------------------------------------------------
+
+tags:
+
+  - customer
+
+  - curated
+
+  - daily
+
+  - incremental
+
+  - production
