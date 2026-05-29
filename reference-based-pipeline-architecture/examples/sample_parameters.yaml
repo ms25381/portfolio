@@ -1,1 +1,113 @@
+# ============================================================
+# SAMPLE RUNTIME PARAMETERS
+# ============================================================
+# Runtime values consumed by the pipeline template.
+#
+# Parameters contain business-specific values and environment
+# settings, but DO NOT contain execution logic.
+#
+# Changing parameter values should not require changes to:
+# - Schema Contracts
+# - Pipeline Templates
+# - Orchestration Definitions
+# ============================================================
 
+parameter_set_id: customer_daily_parameters
+
+name: Customer Daily Runtime Parameters
+
+description: >
+  Runtime configuration for daily customer ingestion.
+
+environment: prod
+
+source:
+
+  catalog: raw
+
+  schema: crm
+
+  table: customer
+
+target:
+
+  catalog: curated
+
+  schema: customer_domain
+
+  table: customer_master
+
+load_strategy:
+
+  type: incremental
+
+  watermark_column: modified_date
+
+  merge_key:
+
+    - customer_id
+
+processing:
+
+  batch_size: 100000
+
+  parallelism: 8
+
+  repartition_count: 32
+
+data_quality:
+
+  fail_on_error: true
+
+  max_error_percentage: 1.0
+
+  required_columns:
+
+    - customer_id
+    - customer_name
+    - modified_date
+
+audit:
+
+  capture_row_counts: true
+
+  capture_runtime_metrics: true
+
+  write_audit_records: true
+
+notifications:
+
+  email_on_failure: true
+
+  email_on_success: false
+
+security:
+
+  pii_columns:
+
+    - email_address
+    - phone_number
+
+  mask_pii: true
+
+environment_overrides:
+
+  dev:
+
+    processing:
+      batch_size: 1000
+
+    data_quality:
+      fail_on_error: false
+
+  test:
+
+    processing:
+      batch_size: 10000
+
+  prod:
+
+    processing:
+      batch_size: 100000
+
+version: 1.0
